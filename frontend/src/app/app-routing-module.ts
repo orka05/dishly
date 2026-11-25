@@ -6,7 +6,7 @@ const routes: Routes = [
     path: '',
     loadChildren: () => import('./features/auth/auth-module').then((m) => m.AuthModule),
   },
-  { path: '**', redirectTo: 'sign-up' },
+  { path: '**', redirectTo: 'login' },
 ];
 
 @NgModule({
