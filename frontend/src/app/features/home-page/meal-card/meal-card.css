@@ -1,0 +1,101 @@
+:host {
+  flex: 0 0 var(--card-size);
+  min-width: 0;
+  min-height: calc(var(--card-size) + 8px + var(--caption-height));
+  border-radius: 20px;
+}
+
+.meal-photo {
+  position: relative;
+  box-sizing: border-box;
+  aspect-ratio: 1;
+  overflow: hidden;
+  border: 1px solid #ccc;
+  border-radius: 20px;
+}
+
+@media (hover: hover) {
+  :host(:hover) {
+    cursor: pointer;
+    box-shadow: 0 0 0 1px rgb(53 94 59 / 25%), 0 4px 10px rgb(53 94 59 / 15%);
+    transform: translateY(-3px);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  :host {
+    transition: transform 300ms ease, box-shadow 300ms ease;
+  }
+}
+
+.dish-image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.sprouts,
+.cauliflower,
+.butter-chicken,
+.pasta {
+  bottom: auto;
+  right: auto;
+  object-fit: fill;
+}
+
+.sprouts,
+.cauliflower,
+.butter-chicken {
+  height: 150%;
+}
+
+.sprouts {
+  top: -46.17%;
+}
+.cauliflower {
+  top: -44.18%;
+}
+.butter-chicken {
+  top: -28.83%;
+}
+.pasta {
+  top: -19.45%;
+  left: -48.67%;
+  width: 197.33%;
+  height: 131.56%;
+}
+
+.meal-plus {
+  position: absolute;
+  top: 9px;
+  right: 9px;
+  width: 33px;
+  height: 33px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: white;
+  box-shadow: 0 6px 6px rgb(0 0 0 / 25%);
+}
+
+p {
+  display: -webkit-box;
+  max-height: 3.3em;
+  margin: 8px 10px 0 7px;
+  overflow: hidden;
+  font:
+    700 21px / 1.1 'DM Sans',
+    Arial,
+    sans-serif;
+  letter-spacing: -0.03em;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+}
+
+@media (max-width: 600px) {
+  p {
+    font-size: 16px;
+  }
+}

@@ -1,0 +1,139 @@
+:host {
+  display: block;
+  --accent: #f90;
+  --green: #355e3b;
+  --page-gutter: 40px;
+  --card-size: 210px;
+  --card-gap: 33px;
+  --caption-height: 81px;
+}
+
+main {
+  padding-block: 38px 16px;
+}
+
+h1 {
+  margin: 0 0 31px;
+  padding-inline: var(--page-gutter) calc(var(--page-gutter) + 48px);
+  text-align: center;
+  font-size: 48px;
+  font-weight: 900;
+  line-height: 65px;
+}
+
+.make-now {
+  padding-block: 17px 22px;
+  background: rgb(139 168 136 / 50%);
+}
+
+.make-now .section-heading {
+  margin-bottom: 17px;
+}
+
+.make-now .see-all {
+  margin-top: -3px;
+  color: inherit;
+}
+
+.make-now + section {
+  padding-top: 19px;
+}
+
+.make-now + section .meals {
+  margin-inline-start: max(0px, calc(var(--page-gutter) - 24px));
+}
+
+.section-heading {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 0 15px 23px var(--page-gutter);
+}
+
+h2 {
+  margin: 0;
+  font-size: 33px;
+  font-weight: 800;
+  line-height: 46px;
+}
+
+.heading-brand {
+  white-space: nowrap;
+}
+
+.heading-brand img {
+  width: auto;
+  height: 1.24em;
+  margin-inline: -0.07em -0.26em;
+  vertical-align: -0.17em;
+}
+
+.see-all {
+  align-self: flex-start;
+  flex: none;
+  margin-top: 5px;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  color: var(--accent);
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 1.4;
+  text-decoration: underline;
+}
+
+.meals {
+  display: flex;
+  gap: var(--card-gap);
+  margin: -4px 0 0 calc(var(--page-gutter) - 16px);
+  padding: 4px 16px 15px;
+  overflow-x: auto;
+  list-style: none;
+}
+
+.meals::-webkit-scrollbar {
+  height: 7px;
+}
+
+.meals::-webkit-scrollbar-thumb {
+  background: var(--green);
+  border-radius: 100px;
+}
+
+.make-now .meals {
+  padding-bottom: 0;
+}
+
+@media (max-width: 600px) {
+  :host {
+    --page-gutter: 16px;
+    --card-size: 150px;
+    --card-gap: 16px;
+    --caption-height: 51px;
+  }
+
+  main {
+    padding-top: 24px;
+  }
+
+  h1 {
+    margin-bottom: 20px;
+    padding-inline: var(--page-gutter);
+    font-size: 32px;
+    line-height: 1.15;
+  }
+
+  h2 {
+    font-size: 24px;
+    line-height: 1.2;
+  }
+
+  .section-heading {
+    margin-bottom: 16px;
+  }
+
+  .see-all {
+    font-size: 16px;
+  }
+}

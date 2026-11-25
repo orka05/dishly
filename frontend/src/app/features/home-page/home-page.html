@@ -1,0 +1,27 @@
+<app-site-navigation />
+
+<main id="home-page">
+  <h1>What are we cooking today?</h1>
+  @for (section of sections; track section.id) {
+    <section
+      [class.make-now]="section.id === 'make-now'"
+      [attr.aria-labelledby]="section.id + '-heading'"
+    >
+      <div class="section-heading">
+        <h2 [id]="section.id + '-heading'">
+          @if (section.id === 'popular') {
+            Most Popular <span class="heading-brand"><img src="dishly/logo.png" alt="Dishly" />’s:</span>
+          } @else {
+            {{ section.title }}
+          }
+        </h2>
+        <button class="see-all" type="button" disabled>See All</button>
+      </div>
+      <ul class="meals">
+        @for (meal of section.meals; track $index) {
+          <li app-meal-card [meal]="meal"></li>
+        }
+      </ul>
+    </section>
+  }
+</main>

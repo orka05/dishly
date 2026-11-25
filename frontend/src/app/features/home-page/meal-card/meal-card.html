@@ -1,0 +1,12 @@
+<div class="meal-photo">
+  <img
+    class="dish-image"
+    [class]="meal().image"
+    [src]="'dishly/' + meal().image + '.png'"
+    alt=""
+  />
+  <span class="meal-plus" aria-hidden="true">
+    <img src="dishly/plus.svg" alt="" />
+  </span>
+</div>
+<p>{{ meal().title }}</p>

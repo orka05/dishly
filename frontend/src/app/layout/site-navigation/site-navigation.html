@@ -1,0 +1,42 @@
+<header class="site-header" (keydown.escape)="menuOpen.set(false)">
+  <a class="brand" href="./" aria-label="Dishly home">
+    <img src="dishly/logo.png" alt="Dishly" />
+  </a>
+  <button
+    class="menu-toggle"
+    type="button"
+    aria-label="Toggle navigation"
+    aria-controls="main-navigation"
+    [attr.aria-expanded]="menuOpen()"
+    (click)="menuOpen.set(!menuOpen())"
+  >
+    <img src="dishly/menu.svg" alt="" />
+  </button>
+  <nav id="main-navigation" aria-label="Main navigation" [class.is-open]="menuOpen()">
+    @for (item of navigation; track item.icon) {
+      @if (item.available) {
+        <a
+          class="nav-item current"
+          href="#home-page"
+          aria-current="page"
+          (click)="menuOpen.set(false)"
+        >
+          <ng-container *ngTemplateOutlet="navIcon; context: { $implicit: item.icon }" />
+          {{ item.label }}
+        </a>
+      } @else {
+        <button class="nav-item" type="button" disabled>
+          <ng-container *ngTemplateOutlet="navIcon; context: { $implicit: item.icon }" />
+          {{ item.label }}
+        </button>
+      }
+    }
+  </nav>
+</header>
+
+<ng-template #navIcon let-icon>
+  <picture class="nav-icon">
+    <source media="(min-width: 601px)" [srcset]="'dishly/desktop-' + icon + '.svg'" />
+    <img [src]="'dishly/' + icon + '.svg'" alt="" />
+  </picture>
+</ng-template>
