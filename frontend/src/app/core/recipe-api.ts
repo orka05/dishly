@@ -32,6 +32,11 @@ export function recipeImageUrl(path: string): string {
   return /^(?:https?:)?\/\//i.test(path) ? path : '/api/' + path.replace(/^\/+/, '');
 }
 
+export interface PantryRecipes {
+  readonly ingredients: readonly { readonly id: number; readonly name: string }[];
+  readonly recipes: readonly RecipeCard[];
+}
+
 @Injectable({ providedIn: 'root' })
 export class RecipeApi {
   private readonly http = inject(HttpClient);
@@ -44,5 +49,9 @@ export class RecipeApi {
 
   getDetails(id: string) {
     return this.http.get<RecipeDetails>(this.baseUrl + '/' + encodeURIComponent(id));
+  }
+
+  getPantryRecipes() {
+    return this.http.get<PantryRecipes>(this.baseUrl + '/from-my-ingredients');
   }
 }

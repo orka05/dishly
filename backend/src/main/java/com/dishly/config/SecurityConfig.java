@@ -38,6 +38,7 @@ public class SecurityConfig {
 				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 				.authorizeHttpRequests(auth -> auth
 						.requestMatchers(HttpMethod.GET, "/api/auth/me").authenticated()
+						.requestMatchers("/dishly/recipe/from-my-ingredients").authenticated()
 						.requestMatchers("/api/admin/catalogs/**").hasRole("ADMIN")
 						.anyRequest().permitAll())
 				.oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter)))
