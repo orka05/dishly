@@ -192,4 +192,9 @@ INSERT INTO measurement_units VALUES
 INSERT INTO allergens VALUES
     ('MILK', 'Mleko'), ('GLUTEN', 'Gluten'), ('PEANUT', 'Kikiriki');
 
+-- Initial administrator (development password: Admin123). Change it before any real deployment.
+INSERT INTO app_users (username, email, password_hash, role, activated_at)
+VALUES ('admin', 'admin@dishly.com', '$2a$10$yUTGuN5PK3tAMj5.SMIDK.AiDoML9kJFI1kLuVVWGhZBmoSRRuDW2', 'ADMIN', now())
+ON CONFLICT DO NOTHING;
+
 COMMIT;
