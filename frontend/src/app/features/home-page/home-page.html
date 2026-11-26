@@ -2,26 +2,39 @@
 
 <main id="home-page">
   <h1>What are we cooking today?</h1>
-  @for (section of sections; track section.id) {
-    <section
-      [class.make-now]="section.id === 'make-now'"
-      [attr.aria-labelledby]="section.id + '-heading'"
-    >
-      <div class="section-heading">
-        <h2 [id]="section.id + '-heading'">
-          @if (section.id === 'popular') {
-            Most Popular <span class="heading-brand"><img src="dishly/logo.png" alt="Dishly" />’s:</span>
-          } @else {
-            {{ section.title }}
-          }
-        </h2>
-        <button class="see-all" type="button" disabled>See All</button>
-      </div>
-      <ul class="meals">
-        @for (meal of section.meals; track $index) {
-          <li app-meal-card [meal]="meal"></li>
+
+  <div class="meal-tabs" role="tablist" aria-label="Browse recipes" (keydown)="moveTabFocus($event)">
+    @for (section of sections; track section.id; let index = $index) {
+      <button
+        type="button"
+        role="tab"
+        [id]="section.id + '-tab'"
+        [attr.aria-selected]="activeTab() === index"
+        [attr.tabindex]="activeTab() === index ? 0 : -1"
+        aria-controls="meal-results"
+        (click)="activeTab.set(index)"
+      >
+        {{ section.title }}
+      </button>
+    }
+  </div>
+
+  @let section = sections[activeTab()];
+  <section id="meal-results" role="tabpanel" [attr.aria-labelledby]="section.id + '-tab'" tabindex="0">
+    <p class="section-description">{{ section.description }}</p>
+
+    @if (section.ingredients; as ingredients) {
+      <ul class="ingredients" aria-label="Available ingredients">
+        @for (ingredient of ingredients; track ingredient) {
+          <li>{{ ingredient }}</li>
         }
       </ul>
-    </section>
-  }
+    }
+
+    <ul class="meals">
+      @for (meal of section.meals; track meal.image) {
+        <li app-meal-card [meal]="meal" [ranked]="section.id === 'popular'"></li>
+      }
+    </ul>
+  </section>
 </main>

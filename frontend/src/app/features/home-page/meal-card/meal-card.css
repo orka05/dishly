@@ -1,101 +1,182 @@
 :host {
-  flex: 0 0 var(--card-size);
+  position: relative;
   min-width: 0;
-  min-height: calc(var(--card-size) + 8px + var(--caption-height));
-  border-radius: 20px;
+  border: 1px solid #e6ddd4;
+  border-radius: 16px;
+  background: #fffdfa;
+}
+
+.meal-link {
+  display: block;
+  border-radius: inherit;
+  color: inherit;
+  text-decoration: none;
 }
 
 .meal-photo {
-  position: relative;
-  box-sizing: border-box;
-  aspect-ratio: 1;
   overflow: hidden;
-  border: 1px solid #ccc;
-  border-radius: 20px;
-}
-
-@media (hover: hover) {
-  :host(:hover) {
-    cursor: pointer;
-    box-shadow: 0 0 0 1px rgb(53 94 59 / 25%), 0 4px 10px rgb(53 94 59 / 15%);
-    transform: translateY(-3px);
-  }
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  :host {
-    transition: transform 300ms ease, box-shadow 300ms ease;
-  }
+  aspect-ratio: 4 / 3;
+  margin: -1px -1px 0;
+  border-radius: 16px 16px 0 0;
 }
 
 .dish-image {
-  position: absolute;
-  inset: 0;
+  display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
-.sprouts,
-.cauliflower,
-.butter-chicken,
-.pasta {
-  bottom: auto;
-  right: auto;
-  object-fit: fill;
+.meal-details {
+  box-sizing: border-box;
+  min-height: 94px;
+  padding: 12px 15px 15px;
+  color: #181614;
 }
 
-.sprouts,
-.cauliflower,
-.butter-chicken {
-  height: 150%;
+.meal-title {
+  margin: 0 0 17px;
+  overflow: hidden;
+  font: 700 20px/1.3 'DM Sans', Nunito, sans-serif;
+  letter-spacing: -0.02em;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-.sprouts {
-  top: -46.17%;
+.meal-meta {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding-right: 36px;
+  font-size: 14px;
+  line-height: 16px;
+  white-space: nowrap;
 }
-.cauliflower {
-  top: -44.18%;
+
+.meal-meta > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
 }
-.butter-chicken {
-  top: -28.83%;
+
+.meal-time {
+  padding-left: 14px;
+  border-left: 1px solid #e6ddd4;
 }
-.pasta {
-  top: -19.45%;
-  left: -48.67%;
-  width: 197.33%;
-  height: 131.56%;
+
+.star {
+  width: 15px;
+  height: 15px;
+  background: #f5a000;
+  clip-path: polygon(50% 0%, 64% 32%, 99% 38%, 73% 62%, 80% 97%,
+    50% 80%, 20% 97%, 27% 62%, 1% 38%, 36% 32%);
+}
+
+.clock {
+  position: relative;
+  box-sizing: border-box;
+  width: 14px;
+  height: 14px;
+  border: 1.3px solid currentColor;
+  border-radius: 50%;
+}
+
+.clock::after {
+  position: absolute;
+  top: 2px;
+  left: 5px;
+  width: 3px;
+  height: 4px;
+  border-bottom: 1px solid currentColor;
+  border-left: 1px solid currentColor;
+  content: '';
+  transform: skewY(30deg);
+  transform-origin: left bottom;
 }
 
 .meal-plus {
   position: absolute;
-  top: 9px;
-  right: 9px;
-  width: 33px;
-  height: 33px;
+  right: 15px;
+  bottom: 16px;
   display: grid;
+  box-sizing: border-box;
+  width: 34px;
+  height: 34px;
   place-items: center;
   border-radius: 50%;
-  background: white;
-  box-shadow: 0 6px 6px rgb(0 0 0 / 25%);
+  background: #fffdfa;
+  box-shadow: inset 0 0 0 1.5px #ff8000;
+  color: #b03400;
 }
 
-p {
-  display: -webkit-box;
-  max-height: 3.3em;
-  margin: 8px 10px 0 7px;
-  overflow: hidden;
-  font:
-    700 21px / 1.1 'DM Sans',
-    Arial,
-    sans-serif;
-  letter-spacing: -0.03em;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 3;
+.meal-plus::before {
+  width: 12px;
+  height: 12px;
+  background:
+    linear-gradient(currentColor, currentColor) center / 12px 1px no-repeat,
+    linear-gradient(currentColor, currentColor) center / 1px 12px no-repeat;
+  content: '';
+}
+
+@media (hover: hover) {
+  :host(:hover) {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 12px rgb(118 65 24 / 18%);
+    cursor: pointer;
+  }
+
+  .meal-plus:hover {
+    transform: scale(1.12) rotate(90deg);
+    background: #ffebcf;
+    box-shadow: inset 0 0 0 1.5px #ff8000, 0 3px 8px rgb(185 74 0 / 24%);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  :host {
+    transition: transform 200ms ease, box-shadow 200ms ease;
+  }
+
+  .meal-plus {
+    transition: transform 200ms ease, background-color 200ms ease, box-shadow 200ms ease;
+  }
 }
 
 @media (max-width: 600px) {
-  p {
-    font-size: 16px;
+  .meal-details {
+    min-height: 0;
+    padding: 6px 8px 8px;
+  }
+
+  .meal-title {
+    display: -webkit-box;
+    min-height: 2.6em;
+    margin-bottom: 5px;
+    font-size: 14px;
+    white-space: normal;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+  }
+
+  .meal-meta {
+    gap: 6px;
+    padding-right: 0;
+    font-size: 12px;
+  }
+
+  .meal-meta > span {
+    gap: 4px;
+  }
+
+  .meal-time {
+    padding-left: 6px;
+  }
+
+  .meal-plus {
+    top: 6px;
+    right: 6px;
+    bottom: auto;
+    width: 30px;
+    height: 30px;
   }
 }

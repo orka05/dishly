@@ -1,139 +1,138 @@
 :host {
   display: block;
-  --accent: #f90;
-  --green: #355e3b;
-  --page-gutter: 40px;
-  --card-size: 210px;
-  --card-gap: 33px;
-  --caption-height: 81px;
+  min-height: 100dvh;
+  background: #faf7f0;
+  color: #181614;
+  --accent: #b94a00;
+  --warm-line: #e6ddd4;
+  --muted-text: #635950;
 }
 
 main {
-  padding-block: 38px 16px;
+  box-sizing: border-box;
+  max-width: 1440px;
+  margin-inline: auto;
+  padding: 37px clamp(20px, 4.1667vw, 60px) 48px;
 }
 
 h1 {
-  margin: 0 0 31px;
-  padding-inline: var(--page-gutter) calc(var(--page-gutter) + 48px);
-  text-align: center;
-  font-size: 48px;
+  max-width: 24ch;
+  margin: 0 0 29px;
+  font-size: clamp(32px, 3.2vw, 46px);
   font-weight: 900;
-  line-height: 65px;
+  line-height: 1.12;
+  letter-spacing: -0.035em;
 }
 
-.make-now {
-  padding-block: 17px 22px;
-  background: rgb(139 168 136 / 50%);
-}
-
-.make-now .section-heading {
-  margin-bottom: 17px;
-}
-
-.make-now .see-all {
-  margin-top: -3px;
-  color: inherit;
-}
-
-.make-now + section {
-  padding-top: 19px;
-}
-
-.make-now + section .meals {
-  margin-inline-start: max(0px, calc(var(--page-gutter) - 24px));
-}
-
-.section-heading {
+.meal-tabs {
   display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 12px;
-  margin: 0 15px 23px var(--page-gutter);
+  gap: 16px;
+  border-bottom: 1px solid var(--warm-line);
 }
 
-h2 {
-  margin: 0;
-  font-size: 33px;
-  font-weight: 800;
-  line-height: 46px;
-}
-
-.heading-brand {
-  white-space: nowrap;
-}
-
-.heading-brand img {
-  width: auto;
-  height: 1.24em;
-  margin-inline: -0.07em -0.26em;
-  vertical-align: -0.17em;
-}
-
-.see-all {
-  align-self: flex-start;
-  flex: none;
-  margin-top: 5px;
+.meal-tabs button {
+  min-height: 36px;
+  padding: 0 12px 7px;
   border: 0;
-  padding: 0;
-  background: transparent;
-  color: var(--accent);
+  border-bottom: 3px solid transparent;
+  margin-bottom: -1px;
+  background: none;
+  color: inherit;
   font-size: 20px;
-  font-weight: 500;
-  line-height: 1.4;
-  text-decoration: underline;
+  font-weight: 600;
+  line-height: 1.25;
+  text-align: start;
+  cursor: pointer;
 }
 
+.meal-tabs button:hover,
+.meal-tabs button[aria-selected='true'] {
+  color: var(--accent);
+}
+
+.meal-tabs button[aria-selected='true'] {
+  border-bottom-color: #ff8000;
+  font-weight: 800;
+}
+
+.meal-tabs button:nth-child(-n+2) {
+  min-width: 98px;
+}
+
+.section-description {
+  margin: 14px 0 16px;
+  color: var(--muted-text);
+  font-size: 16px;
+}
+
+.ingredients,
 .meals {
-  display: flex;
-  gap: var(--card-gap);
-  margin: -4px 0 0 calc(var(--page-gutter) - 16px);
-  padding: 4px 16px 15px;
-  overflow-x: auto;
+  padding: 0;
   list-style: none;
 }
 
-.meals::-webkit-scrollbar {
-  height: 7px;
+.ingredients {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: -4px 0 16px;
 }
 
-.meals::-webkit-scrollbar-thumb {
-  background: var(--green);
+.ingredients li {
   border-radius: 100px;
+  padding: 3px 12px;
+  background: #ffecd7;
+  color: #95501e;
+  font-size: 13px;
+  font-weight: 800;
 }
 
-.make-now .meals {
-  padding-bottom: 0;
+.meals {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 24px;
+  margin: 0;
+}
+
+@media (max-width: 900px) {
+  .meals {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 720px) {
+  main {
+    padding-bottom: 84px;
+  }
 }
 
 @media (max-width: 600px) {
-  :host {
-    --page-gutter: 16px;
-    --card-size: 150px;
-    --card-gap: 16px;
-    --caption-height: 51px;
-  }
-
   main {
-    padding-top: 24px;
+    padding: 18px 16px 84px;
   }
 
   h1 {
-    margin-bottom: 20px;
-    padding-inline: var(--page-gutter);
-    font-size: 32px;
-    line-height: 1.15;
+    max-width: 13ch;
+    margin-bottom: 12px;
   }
 
-  h2 {
-    font-size: 24px;
-    line-height: 1.2;
+  .meal-tabs {
+    gap: clamp(6px, 3vw, 16px);
   }
 
-  .section-heading {
-    margin-bottom: 16px;
+  .meal-tabs button,
+  .meal-tabs button:nth-child(-n+2) {
+    min-width: 0;
+    padding-inline: 4px;
+    font-size: clamp(12px, 3.5vw, 15px);
   }
 
-  .see-all {
-    font-size: 16px;
+  .section-description {
+    margin: 10px 0;
+    font-size: 12px;
+  }
+
+  .meals {
+    gap: 10px;
   }
 }

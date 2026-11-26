@@ -1,0 +1,86 @@
+<app-site-navigation [showMobileNavigation]="false" />
+
+<main>
+  <a class="back" routerLink="/">
+    <span class="icon back-icon" aria-hidden="true"></span>
+    Back to recipes
+  </a>
+
+  @let meal = recipe();
+  @let info = details();
+
+  <div class="hero">
+    <picture>
+      @if (info; as detail) {
+        <source media="(max-width: 720px)" [srcset]="detail.mobilePhoto" />
+      }
+      <img [src]="photo()" alt="" />
+    </picture>
+
+    <div class="summary">
+      <h1>{{ meal.title.replace(' & ', ' &\u00a0') }}</h1>
+      <ul class="metadata" aria-label="Recipe information">
+        <li>
+          <span class="icon rating-icon" aria-hidden="true"></span>
+          <span>{{ meal.rating }} @if (info) { ({{ info.ratingCount }}<span class="ratings-word"> ratings</span>) }</span>
+        </li>
+        <li>
+          <span class="icon time-icon" aria-hidden="true"></span>
+          {{ meal.minutes }} min
+        </li>
+        @if (info) {
+          <li>
+            <span class="icon servings-icon" aria-hidden="true"></span>
+            {{ info.servings }} servings
+          </li>
+        }
+      </ul>
+
+      @if (info) {
+        <p class="description">{{ info.description }}</p>
+        <div class="actions">
+          <button class="prepare" type="button" disabled>
+            <img src="dishly/prepare_image.svg" width="20" height="20" alt="" />
+            Start preparing
+          </button>
+          <button class="favorite" type="button" aria-label="Add to favorites" disabled>
+            <span class="icon favorite-icon" aria-hidden="true"></span>
+          </button>
+        </div>
+      }
+    </div>
+  </div>
+
+  <div class="recipe-content" [hidden]="!info">
+    @if (info) {
+      <section class="ingredients" aria-labelledby="ingredients-heading">
+        <h2 id="ingredients-heading">Ingredients</h2>
+        <ul>
+          @for (ingredient of info.ingredients; track ingredient) {
+            <li>{{ ingredient }}</li>
+          }
+        </ul>
+      </section>
+    }
+
+    <section class="instructions" aria-labelledby="instructions-heading">
+      @if (info) {
+        <h2 id="instructions-heading">Instructions</h2>
+        <ol>
+          @for (step of info.steps; track step.title; let index = $index) {
+            <li>
+              <span class="step-number" aria-hidden="true">{{ index + 1 }}</span>
+              <div>
+                <h3>{{ step.title }}</h3>
+                <p>{{ step.description }}</p>
+              </div>
+            </li>
+          }
+        </ol>
+      }
+    </section>
+  </div>
+  @if (!info) {
+    <p class="description">Ingredients and instructions are not available for this recipe yet.</p>
+  }
+</main>

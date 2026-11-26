@@ -3,7 +3,6 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing-module';
 import { App } from './app';
-import { HomePage } from './features/home-page/home-page';
 
 @NgModule({
   declarations: [
@@ -11,8 +10,7 @@ import { HomePage } from './features/home-page/home-page';
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule,
-    HomePage
+    AppRoutingModule
   ],
   providers: [
     provideBrowserGlobalErrorListeners(),

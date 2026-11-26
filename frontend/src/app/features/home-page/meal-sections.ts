@@ -1,60 +1,46 @@
 export interface Meal {
   readonly image: string;
   readonly title: string;
+  readonly rating: string;
+  readonly minutes: number;
+  readonly hasRankedPhoto?: boolean;
 }
 
 interface MealSection {
   readonly id: string;
   readonly title: string;
+  readonly description: string;
   readonly meals: readonly Meal[];
+  readonly ingredients?: readonly string[];
 }
 
-const dishes = {
-  choppedSalad: { image: 'sprouts', title: 'Chopped Vegetable Salad with Fresh Herbs' },
-  eggBowl: { image: 'cauliflower', title: 'Grain Bowl with Eggs, Greens & Roasted Vegetables' },
-  fritters: { image: 'zucchini', title: 'Vegetable Fritters with Greens & Dipping Sauce' },
-  soup: { image: 'butter-chicken', title: 'Creamy Vegetable Soup with Herbs' },
-  grainBowl: { image: 'pasta', title: 'Grain Bowl with Asparagus & Roasted Tomatoes' },
-  greenSalad: { image: 'greek-salad', title: 'Mixed Greens Salad with Avocado & Herbs' },
-  beanSoup: { image: 'make-now-3', title: 'Creamy Bean Soup with Herbs & Seeds' },
-  roastedSalad: { image: 'make-now-1', title: 'Roasted Vegetable Salad with Greens & Crumbled Cheese' },
-  greekSalad: { image: 'make-now-2', title: 'Greek Salad with Feta Cheese & Kalamata Olives' },
-} satisfies Record<string, Meal>;
+const lemonChicken = { image: 'lemon-chicken-orzo', title: 'Lemon Chicken & Orzo', rating: '4.9', minutes: 30, hasRankedPhoto: true };
+const pumpkinSoup = { image: 'roasted-pumpkin-soup', title: 'Roasted Pumpkin Soup', rating: '4.8', minutes: 35, hasRankedPhoto: true };
+const grainBowl = { image: 'mediterranean-grain-bowl', title: 'Mediterranean Grain Bowl', rating: '4.8', minutes: 25, hasRankedPhoto: true };
+const tomatoPasta = { image: 'creamy-tomato-pasta', title: 'Creamy Tomato Pasta', rating: '4.7', minutes: 20 };
+const salmonBowl = { image: 'salmon-avocado-bowl', title: 'Salmon & Avocado Bowl', rating: '4.7', minutes: 25 };
+const shrimpTacos = { image: 'chipotle-shrimp-tacos', title: 'Chipotle Shrimp Tacos', rating: '4.6', minutes: 25 };
+const lasagna = { image: 'spinach-ricotta-lasagna', title: 'Spinach & Ricotta Lasagna', rating: '4.6', minutes: 55 };
+const granola = { image: 'berry-yogurt-granola', title: 'Berry & Yogurt Granola', rating: '4.5', minutes: 10 };
 
 export const mealSections: readonly MealSection[] = [
   {
     id: 'popular',
-    title: 'Most Popular Dishly’s',
-    meals: [
-      dishes.choppedSalad,
-      dishes.eggBowl,
-      dishes.fritters,
-      dishes.soup,
-      dishes.grainBowl,
-      dishes.fritters,
-      dishes.choppedSalad,
-      dishes.greenSalad,
-      dishes.roastedSalad,
-      dishes.greekSalad,
-    ],
-  },
-  {
-    id: 'make-now',
-    title: 'Make Now',
-    meals: [dishes.soup, dishes.greenSalad, dishes.beanSoup],
+    title: 'Popular',
+    description: 'Top-rated in the past month',
+    meals: [lemonChicken, pumpkinSoup, grainBowl, tomatoPasta, salmonBowl, shrimpTacos, lasagna, granola],
   },
   {
     id: 'recent',
-    title: 'Recently Created',
-    meals: [
-      dishes.roastedSalad,
-      dishes.greekSalad,
-      dishes.grainBowl,
-      dishes.soup,
-      dishes.fritters,
-      dishes.eggBowl,
-      dishes.beanSoup,
-      dishes.grainBowl,
-    ],
+    title: 'Newest',
+    description: 'Recently added recipes',
+    meals: [shrimpTacos, salmonBowl, granola, lasagna, tomatoPasta, grainBowl, pumpkinSoup, lemonChicken],
+  },
+  {
+    id: 'ingredients',
+    title: 'From my ingredients',
+    description: 'Recipes you can make with your ingredients',
+    ingredients: ['Orzo', 'Tomatoes', 'Feta'],
+    meals: [lemonChicken, tomatoPasta, shrimpTacos, lasagna],
   },
 ];
