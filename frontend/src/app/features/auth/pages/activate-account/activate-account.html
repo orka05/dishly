@@ -1,0 +1,13 @@
+<app-auth-layout title="Account activation">
+  @if (failed()) {
+    <p class="auth-alert auth-alert--error" role="alert">
+      This activation link is invalid or has expired.
+    </p>
+    <p class="auth-footer">
+      <a class="link" routerLink="/sign-up">Sign up again</a> or
+      <a class="link" routerLink="/login">go to Login</a>
+    </p>
+  } @else {
+    <p class="auth-alert" role="status">Activating your account...</p>
+  }
+</app-auth-layout>
