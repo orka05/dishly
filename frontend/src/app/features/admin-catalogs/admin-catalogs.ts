@@ -1,13 +1,9 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  inject,
-  signal,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
+import { AuthSession } from '../../core/services/auth-session';
 
 interface Entry {
   code: string;
@@ -23,6 +19,8 @@ interface Entry {
 })
 export class AdminCatalogs {
   private readonly http = inject(HttpClient);
+  private readonly router = inject(Router);
+  protected readonly session = inject(AuthSession);
   private readonly options = { headers: { 'X-Requested-With': 'XMLHttpRequest' } };
   private readonly entries = signal<Entry[]>([]);
   private readonly counts = signal<Record<string, number>>({});
@@ -114,6 +112,11 @@ export class AdminCatalogs {
         }),
       );
     });
+  }
+
+  protected signOut(): void {
+    this.session.end();
+    void this.router.navigateByUrl('/login', { replaceUrl: true });
   }
 
   protected async selectCatalog(group: number, catalog: string): Promise<void> {
