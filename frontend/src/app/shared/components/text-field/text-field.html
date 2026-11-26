@@ -1,0 +1,56 @@
+<div class="field" [class.field--error]="hasError" [class.field--success]="isValid">
+  <label class="field__label" [for]="id">{{ label() }}</label>
+
+  <div class="field__control">
+    <input
+      class="field__input"
+      [id]="id"
+      [type]="inputType()"
+      [value]="value()"
+      [disabled]="disabled()"
+      [attr.autocomplete]="autocomplete()"
+      [attr.aria-invalid]="hasError"
+      [attr.aria-describedby]="hasError ? errorId : null"
+      (input)="onInput($event)"
+      (blur)="onBlur()"
+    />
+
+    @if (isPassword()) {
+      <button
+        type="button"
+        class="field__icon field__icon--button"
+        [attr.aria-label]="passwordVisible() ? 'Hide password' : 'Show password'"
+        (click)="togglePasswordVisibility()"
+      >
+        @if (passwordVisible()) {
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z" />
+            <circle cx="12" cy="12" r="3" />
+          </svg>
+        } @else {
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M10.6 5.1A10.4 10.4 0 0 1 12 5c6.5 0 10 7 10 7a17.6 17.6 0 0 1-2.2 3.2" />
+            <path d="M6.6 6.6A17.4 17.4 0 0 0 2 12s3.5 7 10 7a9.7 9.7 0 0 0 5.4-1.6" />
+            <path d="M9.9 9.9a3 3 0 0 0 4.2 4.2" />
+            <path d="m2 2 20 20" />
+          </svg>
+        }
+      </button>
+    } @else if (hasError) {
+      <svg class="field__icon field__icon--error" viewBox="0 0 24 24" aria-hidden="true">
+        <circle cx="12" cy="12" r="10" />
+        <path d="M12 7v6" />
+        <path d="M12 16.5v.5" />
+      </svg>
+    } @else if (isValid) {
+      <svg class="field__icon field__icon--success" viewBox="0 0 24 24" aria-hidden="true">
+        <circle cx="12" cy="12" r="10" />
+        <path d="m8 12 3 3 5-6" />
+      </svg>
+    }
+  </div>
+
+  @if (hasError) {
+    <p class="field__error" [id]="errorId">{{ errorMessage }}</p>
+  }
+</div>

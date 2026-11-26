@@ -19,6 +19,10 @@ const routes: Routes = [
     loadComponent: () => import('./features/recipe-page/recipe-page').then((module) => module.RecipePage),
     resolve: { recipe: resolveRecipe },
   },
+  {
+    path: '',
+    loadChildren: () => import('./features/auth/auth-module').then((module) => module.AuthModule),
+  },
   { path: '**', redirectTo: '' },
 ];
 
@@ -29,6 +33,6 @@ const routes: Routes = [
       scrollPositionRestoration: 'enabled',
     }),
   ],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}
