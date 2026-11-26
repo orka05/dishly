@@ -1,3 +1,17 @@
+@font-face {
+  font-family: Nunito;
+  src: url('/dishly/nunito.woff2') format('woff2');
+  font-weight: 400 900;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'DM Sans';
+  src: url('/dishly/dm-sans.woff2') format('woff2');
+  font-weight: 700;
+  font-display: swap;
+}
+
 :root {
   --color-primary: #ff9900;
   --color-primary-hover: #f08c00;
@@ -87,4 +101,14 @@ input {
 
 .btn-outline:hover {
   border-color: var(--color-text-muted);
+}
+
+app-home-page,
+app-recipe-page {
+  font-family: Nunito, Arial, sans-serif;
+}
+
+:focus-visible {
+  outline: 2px solid #355e3b;
+  outline-offset: 2px;
 }

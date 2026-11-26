@@ -1,6 +1,8 @@
 {
-  "/api": {
+  "^/api/dishly/(?:recipe(?:[/?]|$)|home/)": {
     "target": "http://localhost:8080",
-    "secure": false
+    "pathRewrite": {
+      "^/api": ""
+    }
   }
 }
