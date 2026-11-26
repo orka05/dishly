@@ -20,8 +20,16 @@
       <a class="link forgot-password" routerLink="/forgot-password">Forgot Password?</a>
     </div>
 
-    <button type="submit" class="btn btn-primary auth-form__submit" [disabled]="form.invalid">
-      Login
+    @if (errorMessage(); as message) {
+      <p class="auth-alert auth-alert--error" role="alert">{{ message }}</p>
+    }
+
+    <button
+      type="submit"
+      class="btn btn-primary auth-form__submit"
+      [disabled]="form.invalid || submitting()"
+    >
+      {{ submitting() ? 'Logging in...' : 'Login' }}
     </button>
   </form>
 

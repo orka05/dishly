@@ -4,10 +4,20 @@
       <img src="dishly/logo.png" alt="Dishly" />
     </a>
     <nav aria-label="Main navigation">
-      @for (item of navigation; track item.icon) {
-        @if (item.icon === 'home') {
-          <a class="nav-item current" routerLink="/" aria-current="page">
-            <span class="nav-icon" aria-hidden="true" style="mask-image: url('dishly/home/nav-home.png')"></span>
+      @for (item of navigation(); track item.icon) {
+        @if (item.path) {
+          <a
+            class="nav-item"
+            [routerLink]="item.path"
+            routerLinkActive="current"
+            [routerLinkActiveOptions]="{ exact: item.path === '/' }"
+            ariaCurrentWhenActive="page"
+          >
+            <span
+              class="nav-icon"
+              aria-hidden="true"
+              [style.mask-image]="'url(dishly/home/nav-' + item.icon + '.png)'"
+            ></span>
             {{ item.label }}
           </a>
         } @else {

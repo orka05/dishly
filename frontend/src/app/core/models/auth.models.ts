@@ -8,10 +8,32 @@ export interface RegisterResponse {
   id: number;
   username: string;
   email: string;
-  role: 'USER' | 'ADMIN';
+  role: UserRole;
   activated: boolean;
   createdAt: string;
   message: string;
+}
+
+export type UserRole = 'USER' | 'ADMIN';
+
+export interface AuthUser {
+  id: number;
+  username: string;
+  email: string;
+  role: UserRole;
+}
+
+export interface LoginRequest {
+  /** Username or email address. */
+  identifier: string;
+  password: string;
+}
+
+export interface LoginResponse {
+  accessToken: string;
+  tokenType: 'Bearer';
+  expiresAt: string;
+  user: AuthUser;
 }
 
 export interface MessageResponse {

@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import com.dishly.exception.AccountNotActivatedException;
+import com.dishly.exception.InvalidCredentialsException;
 import com.dishly.exception.InvalidTokenException;
 import com.dishly.exception.UserAlreadyExistsException;
 import com.dishly.service.RegistrationService;
@@ -64,5 +66,15 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 	@ExceptionHandler(InvalidTokenException.class)
 	ProblemDetail handleInvalidToken(InvalidTokenException ex) {
 		return ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, ex.getMessage());
+	}
+
+	@ExceptionHandler(InvalidCredentialsException.class)
+	ProblemDetail handleInvalidCredentials(InvalidCredentialsException ex) {
+		return ProblemDetail.forStatusAndDetail(HttpStatus.UNAUTHORIZED, ex.getMessage());
+	}
+
+	@ExceptionHandler(AccountNotActivatedException.class)
+	ProblemDetail handleAccountNotActivated(AccountNotActivatedException ex) {
+		return ProblemDetail.forStatusAndDetail(HttpStatus.FORBIDDEN, ex.getMessage());
 	}
 }
