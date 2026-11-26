@@ -12,6 +12,12 @@ spring.jpa.open-in-view=false
 app.frontend-url=http://localhost:4200
 app.activation-token-validity=24h
 
+# --- JWT ---
+# Base64-encoded key of at least 32 bytes. Generate one in PowerShell:
+#   $b = New-Object byte[] 48; [Security.Cryptography.RandomNumberGenerator]::Create().GetBytes($b); [Convert]::ToBase64String($b)
+app.jwt.secret=CHANGE_ME_TO_A_LONG_RANDOM_BASE64_SECRET
+app.jwt.validity=30d
+
 # --- Mail (Gmail SMTP) ---
 # Without spring.mail.host the activation link is only written to the backend log.
 # Gmail requires an App Password (Google account > Security > 2-Step Verification > App passwords).
