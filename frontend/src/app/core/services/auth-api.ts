@@ -3,7 +3,10 @@ import { Injectable, inject } from '@angular/core';
 import { Observable, map } from 'rxjs';
 
 import {
+  AuthUser,
   AvailabilityResponse,
+  LoginRequest,
+  LoginResponse,
   MessageResponse,
   RegisterRequest,
   RegisterResponse,
@@ -24,6 +27,14 @@ export class AuthApi {
 
   isEmailAvailable(email: string): Observable<boolean> {
     return this.checkAvailability('email', email);
+  }
+
+  login(request: LoginRequest): Observable<LoginResponse> {
+    return this.http.post<LoginResponse>(`${this.baseUrl}/login`, request);
+  }
+
+  me(): Observable<AuthUser> {
+    return this.http.get<AuthUser>(`${this.baseUrl}/me`);
   }
 
   activate(token: string): Observable<MessageResponse> {
