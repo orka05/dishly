@@ -1,19 +1,22 @@
-<a class="meal-link" [routerLink]="['/recipes', meal().image]" [attr.aria-label]="meal().title">
+<a class="meal-link" [routerLink]="['/recipes', meal().id]" [attr.aria-label]="meal().title">
   <div class="meal-photo">
-    <img
-      class="dish-image"
-      [src]="'dishly/home/' + meal().image + (meal().hasRankedPhoto && !ranked() ? '-unranked' : '') + '.png'"
-      alt=""
-    />
+    <img class="dish-image" [src]="imageUrl()" alt="" />
+    @if (rank(); as position) {
+      <span class="rank" [attr.aria-label]="'Rank ' + position">#{{ position }}</span>
+    }
   </div>
 
   <div class="meal-details">
     <p class="meal-title" [title]="meal().title">{{ meal().title }}</p>
     <div class="meal-meta">
-      <span [attr.aria-label]="'Rating ' + meal().rating + ' out of 5'">
-        <span class="star" aria-hidden="true"></span> {{ meal().rating }}
-      </span>
-      <span class="meal-time"><span class="clock" aria-hidden="true"></span>{{ meal().minutes }} min</span>
+      @if (meal().averageRating !== null) {
+        <span [attr.aria-label]="'Rating ' + meal().averageRating + ' out of 5'">
+          <span class="star" aria-hidden="true"></span> {{ meal().averageRating | number:'1.1-2' }}
+        </span>
+      } @else {
+        <span>Not rated</span>
+      }
+      <span class="meal-time"><span class="clock" aria-hidden="true"></span>{{ meal().totalMinutes }} min</span>
     </div>
   </div>
 

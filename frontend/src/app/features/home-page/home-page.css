@@ -65,26 +65,9 @@ h1 {
   font-size: 16px;
 }
 
-.ingredients,
 .meals {
   padding: 0;
   list-style: none;
-}
-
-.ingredients {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin: -4px 0 16px;
-}
-
-.ingredients li {
-  border-radius: 100px;
-  padding: 3px 12px;
-  background: #ffecd7;
-  color: #95501e;
-  font-size: 13px;
-  font-weight: 800;
 }
 
 .meals {

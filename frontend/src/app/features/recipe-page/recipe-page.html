@@ -7,37 +7,40 @@
   </a>
 
   @let meal = recipe();
-  @let info = details();
+  @if (meal === 'not-found') {
+    <h1>Recipe not found</h1>
+  } @else if (meal === 'error') {
+    <h1>Recipe could not be loaded</h1>
+  } @else {
+    <div class="hero">
+      <picture>
+        <img [src]="imageUrl()" alt="" />
+      </picture>
 
-  <div class="hero">
-    <picture>
-      @if (info; as detail) {
-        <source media="(max-width: 720px)" [srcset]="detail.mobilePhoto" />
-      }
-      <img [src]="photo()" alt="" />
-    </picture>
-
-    <div class="summary">
-      <h1>{{ meal.title.replace(' & ', ' &\u00a0') }}</h1>
-      <ul class="metadata" aria-label="Recipe information">
-        <li>
-          <span class="icon rating-icon" aria-hidden="true"></span>
-          <span>{{ meal.rating }} @if (info) { ({{ info.ratingCount }}<span class="ratings-word"> ratings</span>) }</span>
-        </li>
-        <li>
-          <span class="icon time-icon" aria-hidden="true"></span>
-          {{ meal.minutes }} min
-        </li>
-        @if (info) {
+      <div class="summary">
+        <h1>{{ meal.title.replace(' & ', ' &\u00a0') }}</h1>
+        <ul class="metadata" aria-label="Recipe information">
+          <li>
+            <span class="icon rating-icon" aria-hidden="true"></span>
+            @if (meal.averageRating !== null) {
+              <span>{{ meal.averageRating | number:'1.1-2' }} ({{ meal.ratingCount }}<span class="ratings-word"> ratings</span>)</span>
+            } @else {
+              <span>Not rated</span>
+            }
+          </li>
+          <li>
+            <span class="icon time-icon" aria-hidden="true"></span>
+            {{ meal.totalMinutes }} min
+          </li>
           <li>
             <span class="icon servings-icon" aria-hidden="true"></span>
-            {{ info.servings }} servings
+            {{ meal.servings }} {{ meal.servings === 1 ? 'serving' : 'servings' }}
           </li>
-        }
-      </ul>
+        </ul>
 
-      @if (info) {
-        <p class="description">{{ info.description }}</p>
+        @if (meal.description) {
+          <p class="description">{{ meal.description }}</p>
+        }
         <div class="actions">
           <button class="prepare" type="button" disabled>
             <img src="dishly/prepare_image.svg" width="20" height="20" alt="" />
@@ -47,40 +50,47 @@
             <span class="icon favorite-icon" aria-hidden="true"></span>
           </button>
         </div>
-      }
+      </div>
     </div>
-  </div>
 
-  <div class="recipe-content" [hidden]="!info">
-    @if (info) {
+    <div class="recipe-content">
       <section class="ingredients" aria-labelledby="ingredients-heading">
         <h2 id="ingredients-heading">Ingredients</h2>
         <ul>
-          @for (ingredient of info.ingredients; track ingredient) {
-            <li>{{ ingredient }}</li>
+          @for (ingredient of meal.ingredients; track ingredient.position) {
+            <li>
+              <span>
+                {{ ingredient.name }}
+                @if (ingredient.quantity !== null) {
+                  ({{ ingredient.quantity | number }} {{ ingredient.unit }})
+                }
+                @if (ingredient.notes) {
+                  · {{ ingredient.notes }}
+                }
+              </span>
+            </li>
+          } @empty {
+            <li>No ingredients listed.</li>
           }
         </ul>
       </section>
-    }
 
-    <section class="instructions" aria-labelledby="instructions-heading">
-      @if (info) {
+      <section class="instructions" aria-labelledby="instructions-heading">
         <h2 id="instructions-heading">Instructions</h2>
         <ol>
-          @for (step of info.steps; track step.title; let index = $index) {
+          @for (step of meal.steps; track step.position; let index = $index) {
             <li>
               <span class="step-number" aria-hidden="true">{{ index + 1 }}</span>
               <div>
-                <h3>{{ step.title }}</h3>
-                <p>{{ step.description }}</p>
+                <h3>{{ step.title || 'Step ' + (index + 1) }}</h3>
+                <p>{{ step.instructions }}</p>
               </div>
             </li>
+          } @empty {
+            <li>No instructions listed.</li>
           }
         </ol>
-      }
-    </section>
-  </div>
-  @if (!info) {
-    <p class="description">Ingredients and instructions are not available for this recipe yet.</p>
+      </section>
+    </div>
   }
 </main>

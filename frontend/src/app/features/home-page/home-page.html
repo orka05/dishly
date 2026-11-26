@@ -23,18 +23,32 @@
   <section id="meal-results" role="tabpanel" [attr.aria-labelledby]="section.id + '-tab'" tabindex="0">
     <p class="section-description">{{ section.description }}</p>
 
-    @if (section.ingredients; as ingredients) {
-      <ul class="ingredients" aria-label="Available ingredients">
-        @for (ingredient of ingredients; track ingredient) {
-          <li>{{ ingredient }}</li>
-        }
-      </ul>
-    }
-
-    <ul class="meals">
-      @for (meal of section.meals; track meal.image) {
-        <li app-meal-card [meal]="meal" [ranked]="section.id === 'popular'"></li>
+    @let result = results();
+    @switch (result.status) {
+      @case ('loading') {
+        <p class="section-description" role="status">Loading recipes…</p>
       }
-    </ul>
+      @case ('error') {
+        <p class="section-description" role="alert">Recipes could not be loaded.</p>
+      }
+      @case ('unavailable') {
+        <p class="section-description">Ingredient matching is not available yet.</p>
+      }
+      @case ('ready') {
+        @if (result.cards.length) {
+          <ul class="meals">
+            @for (meal of result.cards; track meal.id; let index = $index) {
+              <li
+                app-meal-card
+                [meal]="meal"
+                [rank]="section.id === 'popular' && index < 3 && meal.averageRating !== null ? index + 1 : null"
+              ></li>
+            }
+          </ul>
+        } @else {
+          <p class="section-description">No recipes yet.</p>
+        }
+      }
+    }
   </section>
 </main>

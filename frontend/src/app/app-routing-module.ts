@@ -1,11 +1,18 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { inject, NgModule } from '@angular/core';
-import { RedirectCommand, ResolveFn, Router, RouterModule, Routes } from '@angular/router';
-import { Meal, mealSections } from './features/home-page/meal-sections';
+import { ResolveFn, RouterModule, Routes } from '@angular/router';
+import { catchError, of } from 'rxjs';
+import { RecipeApi, RecipeDetails } from './core/recipe-api';
 
-const resolveRecipe: ResolveFn<Meal> = (route) => {
-  const slug = route.paramMap.get('slug');
-  const recipe = mealSections.flatMap((section) => section.meals).find((meal) => meal.image === slug);
-  return recipe ?? new RedirectCommand(inject(Router).createUrlTree(['/']));
+const resolveRecipe: ResolveFn<RecipeDetails | 'not-found' | 'error'> = (route) => {
+  const id = route.paramMap.get('id');
+  if (!id || !/^[1-9]\d*$/.test(id)) return 'not-found';
+
+  return inject(RecipeApi).getDetails(id).pipe(
+    catchError((error: HttpErrorResponse) =>
+      of<'not-found' | 'error'>(error.status === 404 ? 'not-found' : 'error'),
+    ),
+  );
 };
 
 const routes: Routes = [
@@ -15,7 +22,7 @@ const routes: Routes = [
     loadComponent: () => import('./features/home-page/home-page').then((module) => module.HomePage),
   },
   {
-    path: 'recipes/:slug',
+    path: 'recipes/:id',
     loadComponent: () => import('./features/recipe-page/recipe-page').then((module) => module.RecipePage),
     resolve: { recipe: resolveRecipe },
   },
