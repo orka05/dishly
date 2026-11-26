@@ -1,0 +1,36 @@
+<header class="site-header" [class.logo-only-on-mobile]="!showMobileNavigation()">
+  <div class="header-inner">
+    <a class="brand" routerLink="/" aria-label="Dishly home">
+      <img src="dishly/logo.png" alt="Dishly" />
+    </a>
+    <nav aria-label="Main navigation">
+      @for (item of navigation(); track item.icon) {
+        @if (item.path) {
+          <a
+            class="nav-item"
+            [routerLink]="item.path"
+            routerLinkActive="current"
+            [routerLinkActiveOptions]="{ exact: item.path === '/' }"
+            ariaCurrentWhenActive="page"
+          >
+            <span
+              class="nav-icon"
+              aria-hidden="true"
+              [style.mask-image]="'url(dishly/home/nav-' + item.icon + '.png)'"
+            ></span>
+            {{ item.label }}
+          </a>
+        } @else {
+          <button class="nav-item" type="button" disabled>
+            <span
+              class="nav-icon"
+              aria-hidden="true"
+              [style.mask-image]="'url(dishly/home/nav-' + item.icon + '.png)'"
+            ></span>
+            {{ item.label }}
+          </button>
+        }
+      }
+    </nav>
+  </div>
+</header>

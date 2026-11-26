@@ -1,0 +1,30 @@
+# Copy this file to application.properties (git-ignored) and fill in the secrets.
+
+# --- Database ---
+spring.datasource.url=jdbc:postgresql://localhost:5432/dishly
+spring.datasource.username=postgres
+spring.datasource.password=CHANGE_ME
+# The schema is managed by backend/database/schema.sql; Hibernate only checks that entities match it.
+spring.jpa.hibernate.ddl-auto=validate
+spring.jpa.open-in-view=false
+
+# --- App ---
+app.frontend-url=http://localhost:4200
+app.activation-token-validity=24h
+
+# --- JWT ---
+# Base64-encoded key of at least 32 bytes. Generate one in PowerShell:
+#   $b = New-Object byte[] 48; [Security.Cryptography.RandomNumberGenerator]::Create().GetBytes($b); [Convert]::ToBase64String($b)
+app.jwt.secret=CHANGE_ME_TO_A_LONG_RANDOM_BASE64_SECRET
+app.jwt.validity=30d
+
+# --- Mail (Gmail SMTP) ---
+# Without spring.mail.host the activation link is only written to the backend log.
+# Gmail requires an App Password (Google account > Security > 2-Step Verification > App passwords).
+#spring.mail.host=smtp.gmail.com
+#spring.mail.port=587
+#spring.mail.username=your.address@gmail.com
+#spring.mail.password=your-16-char-app-password
+#spring.mail.properties.mail.smtp.auth=true
+#spring.mail.properties.mail.smtp.starttls.enable=true
+#app.mail-from=Dishly <your.address@gmail.com>
