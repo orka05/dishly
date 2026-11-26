@@ -1,4 +1,8 @@
 <app-auth-layout title="Login">
+  @if (notice) {
+    <p class="auth-alert auth-alert--success" role="status">{{ notice }}</p>
+  }
+
   <form class="auth-form" [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
     <app-text-field
       formControlName="identifier"

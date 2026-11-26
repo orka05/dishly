@@ -30,8 +30,12 @@
       >
     </label>
 
-    <button type="submit" class="btn btn-primary" [disabled]="form.invalid">
-      Create an Account
+    @if (errorMessage(); as message) {
+      <p class="auth-alert auth-alert--error" role="alert">{{ message }}</p>
+    }
+
+    <button type="submit" class="btn btn-primary" [disabled]="!canSubmit()">
+      {{ submitting() ? 'Creating account...' : 'Create an Account' }}
     </button>
   </form>
 
