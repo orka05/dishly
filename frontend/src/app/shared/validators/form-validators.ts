@@ -76,4 +76,6 @@ export const VALIDATION_MESSAGES: Record<string, string> = {
   passwordLength: `Password must be at least ${PASSWORD_MIN_LENGTH} characters long.`,
   passwordComplexity: 'Password must contain at least one letter and one number.',
   mismatch: 'Passwords do not match.',
+  usernameTaken: 'This username is already taken.',
+  emailTaken: 'An account with this email already exists.',
 };
