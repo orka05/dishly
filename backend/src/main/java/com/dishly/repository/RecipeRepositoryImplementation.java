@@ -8,6 +8,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.dishly.domain.Recipe;
+import com.dishly.dto.PantryRecipes;
 import com.dishly.dto.RecipeCard;
 import com.dishly.dto.RecipeDetails.Ingredient;
 import com.dishly.dto.RecipeDetails.Step;
@@ -145,5 +146,48 @@ public class RecipeRepositoryImplementation implements RecipeRepository{
                         row.getString("preparation_type_code"),
                         row.getObject("duration_minutes", Integer.class)
                 ), id);
+    }
+
+    @Override
+    public List<PantryRecipes.Ingredient> findUserIngredients(long userId) {
+        return jdbcTemplate.query("""
+                SELECT i.id, i.name
+                FROM user_ingredients ui
+                JOIN ingredients i ON i.id = ui.ingredient_id
+                WHERE ui.user_id = ?
+                ORDER BY lower(i.name), i.id
+                """, (row, index) -> new PantryRecipes.Ingredient(
+                        row.getLong("id"), row.getString("name")
+                ), userId);
+    }
+
+    @Override
+    public List<RecipeCard> findCardsByUserIngredients(long userId) {
+        return jdbcTemplate.query("""
+                SELECT c.id, c.title, c.cover_image_path, c.total_minutes, c.servings,
+                       c.average_rating, c.rating_count, c.created_at
+                FROM recipe_cards c
+                WHERE EXISTS (
+                    SELECT 1 FROM recipe_ingredients ri WHERE ri.recipe_id = c.id
+                )
+                AND NOT EXISTS (
+                    SELECT 1 FROM recipe_ingredients ri
+                    WHERE ri.recipe_id = c.id
+                    AND NOT EXISTS (
+                        SELECT 1 FROM user_ingredients ui
+                        WHERE ui.user_id = ? AND ui.ingredient_id = ri.ingredient_id
+                    )
+                )
+                ORDER BY c.average_rating DESC NULLS LAST, c.id DESC
+                """, (row, index) -> new RecipeCard(
+                        row.getLong("id"),
+                        row.getString("title"),
+                        row.getString("cover_image_path"),
+                        row.getInt("total_minutes"),
+                        row.getInt("servings"),
+                        row.getBigDecimal("average_rating"),
+                        row.getLong("rating_count"),
+                        row.getObject("created_at", OffsetDateTime.class)
+                ), userId);
     }
 }

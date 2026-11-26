@@ -4,6 +4,7 @@ import java.util.Optional;
 import java.util.List;
 
 import com.dishly.domain.Recipe;
+import com.dishly.dto.PantryRecipes;
 import com.dishly.dto.RecipeCard;
 import com.dishly.dto.RecipeDetails.Ingredient;
 import com.dishly.dto.RecipeDetails.Step;
@@ -18,4 +19,7 @@ public interface RecipeRepository {
     List<Step> findStepsByRecipeId(long id);
 
     record RecipeSummary(RecipeCard card, String description) {}
+
+    List<PantryRecipes.Ingredient> findUserIngredients(long userId);
+    List<RecipeCard> findCardsByUserIngredients(long userId);
 }

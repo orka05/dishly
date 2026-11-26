@@ -53,6 +53,12 @@ CREATE TABLE ingredients (
     default_unit_code text NOT NULL REFERENCES measurement_units,
     brand text CHECK (btrim(brand) <> '')
 );
+CREATE TABLE user_ingredients (
+    user_id bigint NOT NULL REFERENCES app_users ON DELETE CASCADE,
+    ingredient_id bigint NOT NULL REFERENCES ingredients ON DELETE CASCADE,
+    PRIMARY KEY (user_id, ingredient_id)
+);
+
 CREATE TABLE ingredient_allergens (
     ingredient_id bigint NOT NULL REFERENCES ingredients ON DELETE CASCADE,
     allergen_code text NOT NULL REFERENCES allergens,

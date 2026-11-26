@@ -65,6 +65,23 @@ h1 {
   font-size: 16px;
 }
 
+.pantry-ingredients {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0 0 16px;
+  padding: 0;
+  list-style: none;
+}
+
+.pantry-ingredients li {
+  padding: 4px 12px;
+  border-radius: 100px;
+  background: #ffebcf;
+  color: var(--accent);
+  font-size: 14px;
+}
+
 .meals {
   padding: 0;
   list-style: none;

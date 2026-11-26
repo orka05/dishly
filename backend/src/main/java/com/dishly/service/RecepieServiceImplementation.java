@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.dishly.dto.PantryRecipes;
 import com.dishly.dto.RecipeCard;
 import com.dishly.dto.RecipeDetails;
 import com.dishly.repository.RecipeRepository;
@@ -49,5 +50,14 @@ public class RecepieServiceImplementation implements RecipeService {
                     recipeRepository.findStepsByRecipeId(id)
             );
         });
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public PantryRecipes getPantryRecipes(long userId) {
+        return new PantryRecipes(
+                recipeRepository.findUserIngredients(userId),
+                recipeRepository.findCardsByUserIngredients(userId)
+        );
     }
 }

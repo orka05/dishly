@@ -1,36 +1,54 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
+import { RouterLink } from '@angular/router';
 import { catchError, map, of, startWith, switchMap } from 'rxjs';
-import { RecipeApi, RecipeCard } from '../../core/recipe-api';
+import { PantryRecipes, RecipeApi, RecipeCard } from '../../core/recipe-api';
+import { AuthSession } from '../../core/services/auth-session';
 import { SiteNavigation } from '../../layout/site-navigation/site-navigation';
 import { MealCard } from './meal-card/meal-card';
 
 type RecipeListState =
-  | { readonly status: 'loading' | 'error' | 'unavailable' }
-  | { readonly status: 'ready'; readonly cards: readonly RecipeCard[] };
+  | { readonly status: 'loading' | 'error' | 'signed-out' }
+  | {
+      readonly status: 'ready';
+      readonly cards: readonly RecipeCard[];
+      readonly ingredients?: PantryRecipes['ingredients'];
+    };
 
 @Component({
   selector: 'app-home-page',
-  imports: [SiteNavigation, MealCard],
+  imports: [SiteNavigation, MealCard, RouterLink],
   templateUrl: './home-page.html',
   styleUrl: './home-page.css',
 })
 export class HomePage {
   private readonly recipes = inject(RecipeApi);
+  private readonly session = inject(AuthSession);
   protected readonly sections = [
     { id: 'popular', title: 'Popular', description: 'Highest-rated recipes', sort: 'rating' },
     { id: 'recent', title: 'Newest', description: 'Recently added recipes', sort: 'newest' },
     { id: 'ingredients', title: 'From my ingredients', description: 'Recipes you can make with your ingredients', sort: null },
   ] as const;
   protected readonly activeTab = signal(0);
+  private readonly request = computed(() => ({
+    sort: this.sections[this.activeTab()].sort,
+    userId: this.session.user()?.id,
+  }));
   protected readonly results = toSignal(
-    toObservable(this.activeTab).pipe(
-      switchMap((index) => {
-        const sort = this.sections[index].sort;
-        if (!sort) return of<RecipeListState>({ status: 'unavailable' });
+    toObservable(this.request).pipe(
+      switchMap(({ sort, userId }) => {
+        if (!sort && userId === undefined) return of<RecipeListState>({ status: 'signed-out' });
 
-        return this.recipes.getCards(sort).pipe(
-          map((cards): RecipeListState => ({ status: 'ready', cards })),
+        const recipes = sort
+          ? this.recipes.getCards(sort).pipe(
+              map((cards): RecipeListState => ({ status: 'ready', cards })),
+            )
+          : this.recipes.getPantryRecipes().pipe(
+              map(({ ingredients, recipes }): RecipeListState => ({
+                status: 'ready', cards: recipes, ingredients,
+              })),
+            );
+        return recipes.pipe(
           catchError(() => of<RecipeListState>({ status: 'error' })),
           startWith<RecipeListState>({ status: 'loading' }),
         );
