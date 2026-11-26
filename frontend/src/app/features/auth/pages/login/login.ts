@@ -52,9 +52,9 @@ export class Login {
       .login(this.form.getRawValue())
       .pipe(finalize(() => this.submitting.set(false)))
       .subscribe({
-        next: ({ accessToken }) => {
+        next: ({ accessToken, user }) => {
           this.session.start(accessToken);
-          this.router.navigate(['/']);
+          this.router.navigateByUrl(user.role === 'ADMIN' ? '/admin' : '/');
         },
         error: (error: HttpErrorResponse) => this.errorMessage.set(this.toMessage(error)),
       });

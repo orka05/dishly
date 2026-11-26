@@ -3,6 +3,9 @@
     "target": "http://localhost:8080",
     "secure": false
   },
+  "/api/admin/catalogs/**": {
+    "target": "http://localhost:8080"
+  },
   "^/api/dishly/(?:recipe(?:[/?]|$)|home/)": {
     "target": "http://localhost:8080",
     "pathRewrite": {

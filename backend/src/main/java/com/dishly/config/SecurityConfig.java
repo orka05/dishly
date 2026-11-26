@@ -6,7 +6,6 @@ import javax.crypto.spec.SecretKeySpec;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -31,15 +30,17 @@ import com.dishly.service.JwtService;
 public class SecurityConfig {
 
 	@Bean
-	SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+	SecurityFilterChain securityFilterChain(HttpSecurity http, JwtAuthenticationConverter jwtAuthenticationConverter)
+			throws Exception {
 		return http
 				// No cookies/sessions are used, so CSRF protection is not needed.
 				.csrf(csrf -> csrf.disable())
 				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 				.authorizeHttpRequests(auth -> auth
 						.requestMatchers(HttpMethod.GET, "/api/auth/me").authenticated()
+						.requestMatchers("/api/admin/catalogs/**").hasRole("ADMIN")
 						.anyRequest().permitAll())
-				.oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()))
+				.oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter)))
 				.build();
 	}
 
@@ -62,7 +63,7 @@ public class SecurityConfig {
 		return decoder;
 	}
 
-	/** Maps the {@code role} claim to a Spring authority, e.g. {@code ROLE_ADMIN}, for future admin endpoints. */
+	/** Maps the {@code role} claim to a Spring authority, e.g. {@code ROLE_ADMIN}. */
 	@Bean
 	JwtAuthenticationConverter jwtAuthenticationConverter() {
 		JwtGrantedAuthoritiesConverter authorities = new JwtGrantedAuthoritiesConverter();

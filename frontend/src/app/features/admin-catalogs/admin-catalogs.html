@@ -1,0 +1,207 @@
+<div class="workspace">
+  <aside class="sidebar">
+    <p class="sidebar-heading">Workspace</p>
+    <nav class="workspace-nav" aria-label="Workspace">
+      <a href="#catalog-title" aria-current="page">
+        <img src="dishly/admin/list.svg" alt="" /> Catalog
+      </a>
+      <button type="button" disabled>
+        <img src="dishly/admin/message.svg" alt="" /> Category suggestions
+      </button>
+      <button type="button" disabled>
+        <img src="dishly/admin/bell.svg" alt="" /> Notifications
+      </button>
+    </nav>
+    <p class="sidebar-description">Manage catalog data<br />and organize recipes.</p>
+    <p class="restricted"><img src="dishly/admin/settings.svg" alt="" /> Administrators only</p>
+  </aside>
+  <main class="admin">
+    <header class="page-header">
+      <p class="breadcrumb">Administration / Home</p>
+      <h1>Catalog management</h1>
+      <p>Manage recipe types, ingredient categories, and allergens in one place.</p>
+    </header>
+    <nav class="sections" aria-label="Catalog sections">
+      @for (item of groups; track item.catalog; let index = $index) {
+        <button
+          type="button"
+          [attr.aria-pressed]="group() === index"
+          [disabled]="busy()"
+          (click)="selectCatalog(index, item.catalog)"
+        >
+          <span class="section-label">{{ item.label }}</span>
+          <span class="section-description">{{ item.description }}</span>
+          @if (groupCounts()[index] !== undefined) {
+            <span class="section-count">{{ groupCounts()[index] }}</span>
+          }
+        </button>
+      }
+    </nav>
+
+    <section class="panel catalog" aria-labelledby="catalog-title">
+      <div class="catalog-header">
+        <h2 id="catalog-title" tabindex="-1">{{ activeGroup().label }}</h2>
+        <button
+          class="btn btn-primary add-button"
+          type="button"
+          [disabled]="busy() || !!error()"
+          (click)="open(editor, null)"
+        >
+          <img src="dishly/admin/plus.svg" alt="" /> {{ activeGroup().add }}
+        </button>
+      </div>
+      <div class="filters">
+        <label class="search">
+          <span class="visually-hidden">Search by name</span>
+          <input
+            type="search"
+            [placeholder]="activeGroup().search"
+            [ngModel]="search()"
+            (ngModelChange)="searchFor($event)"
+          />
+        </label>
+        @if (group() === 0) {
+          <label class="type-filter">
+            <span class="visually-hidden">Recipe type group</span>
+            <select
+              [ngModel]="catalog()"
+              [disabled]="busy()"
+              (ngModelChange)="selectCatalog(0, $event)"
+            >
+              @for (type of recipeTypes; track type.catalog) {
+                <option [value]="type.catalog">{{ type.label }}</option>
+              }
+            </select>
+          </label>
+        }
+        @if (!error() && !busy()) {
+          <p class="result-count">Items: {{ matching().length }}</p>
+        }
+      </div>
+
+      @if (error()) {
+        <p class="error" role="alert">{{ error() }}</p>
+        <button class="btn btn-outline" type="button" (click)="selectCatalog(group(), catalog())">
+          Try again
+        </button>
+      } @else {
+        <table [attr.aria-busy]="busy()">
+          <thead>
+            <tr>
+              <th scope="col" [attr.aria-sort]="ascending() ? 'ascending' : 'descending'">
+                <button type="button" (click)="sort()">
+                  Name
+                  <img src="dishly/admin/sort.svg" alt="" [class.descending]="!ascending()" />
+                </button>
+              </th>
+              <th scope="col">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (entry of visible(); track entry.code) {
+              <tr>
+                <td>{{ entry.name }}</td>
+                <td>
+                  <div class="actions">
+                    <button
+                      type="button"
+                      [disabled]="busy()"
+                      [attr.aria-label]="'Edit ' + entry.name"
+                      title="Edit"
+                      (click)="open(editor, entry)"
+                    >
+                      <img src="dishly/admin/edit.svg" alt="" />
+                    </button>
+                    <button
+                      type="button"
+                      [disabled]="busy()"
+                      [attr.aria-label]="'Delete ' + entry.name"
+                      title="Delete"
+                      (click)="open(editor, entry, true)"
+                    >
+                      <img src="dishly/admin/trash.svg" alt="" />
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            } @empty {
+              <tr>
+                <td colspan="2">
+                  {{ busy() ? 'Loading…' : search().trim() ? 'No results found.' : 'No items.' }}
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+        <div class="pagination">
+          <span class="page-summary" aria-live="polite">
+            @if (matching().length) {
+              Showing {{ pageStart() + 1 }}–{{ pageStart() + visible().length }} of
+              {{ matching().length }}
+            } @else {
+              Showing 0 items
+            }
+          </span>
+          <label class="page-size">
+            Rows per page
+            <select [ngModel]="pageSize()" (ngModelChange)="resizePage($event)">
+              @for (size of pageSizes; track size) {
+                <option [ngValue]="size">{{ size }}</option>
+              }
+            </select>
+          </label>
+          <button type="button" [disabled]="page() === 1" (click)="page.set(page() - 1)">
+            Previous
+          </button>
+          @for (number of pages(); track number) {
+            <button
+              class="page-number"
+              type="button"
+              [attr.aria-label]="'Page ' + number"
+              [attr.aria-current]="page() === number ? 'page' : null"
+              (click)="page.set(number)"
+            >
+              {{ number }}
+            </button>
+          }
+          <button type="button" [disabled]="page() >= pageCount()" (click)="page.set(page() + 1)">
+            Next
+          </button>
+        </div>
+      }
+    </section>
+  </main>
+</div>
+
+<dialog #editor aria-labelledby="editor-title" (cancel)="busy() && $event.preventDefault()">
+  <form (ngSubmit)="save(editor)">
+    <h2 id="editor-title">
+      {{ deleting ? 'Delete item' : selected ? 'Edit item' : 'New item' }}
+    </h2>
+    @if (deleting) {
+      <p>Are you sure you want to delete “{{ selected?.name }}”?</p>
+    } @else {
+      <label>
+        Name
+        <input name="name" [(ngModel)]="name" maxlength="120" required autofocus />
+      </label>
+    }
+    @if (dialogError()) {
+      <p class="error" role="alert">{{ dialogError() }}</p>
+    }
+    <div class="dialog-actions">
+      <button class="btn btn-outline" type="button" [disabled]="busy()" (click)="editor.close()">
+        Cancel
+      </button>
+      <button
+        class="btn"
+        [class.btn-primary]="!deleting"
+        [class.delete-button]="deleting"
+        type="submit"
+        [disabled]="busy() || (!deleting && !name.trim())"
+      >
+        {{ busy() ? 'Please wait…' : deleting ? 'Delete' : 'Save' }}
+      </button>
+    </div>
+  </form>
+</dialog>
