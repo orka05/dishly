@@ -58,9 +58,8 @@ main {
 picture img {
   display: block;
   width: 100%;
-  aspect-ratio: 574 / 386;
+  height: auto;
   border-radius: 24px;
-  object-fit: cover;
 }
 
 .summary {
@@ -245,7 +244,6 @@ h3 {
   }
 
   picture img {
-    aspect-ratio: 356 / 220;
     border-radius: 16px;
   }
 
